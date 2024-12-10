@@ -34,10 +34,26 @@ def predict():
     if model_index not in [0, 1, 2]:
         return jsonify({"error": "Invalid model index"}), 400
     
+    src = request.form.get('src', 'gallery')
+    cropWidth = float(request.form.get('cropWidth', -1.0))
+    
     # save file to "save"
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     file_path = f"save\\save_{timestamp}.jpg"
     file.save(file_path)
+
+    if src == "camera":
+        cropWidth = int(cropWidth)
+        if cropWidth > 0:
+            from PIL import Image
+            im = Image.open(file_path)
+            width, height = im.size
+            left = (width - cropWidth) / 2
+            top = (height - cropWidth) / 2
+            right = (width + cropWidth) / 2
+            bottom = (height + cropWidth) / 2
+            im = im.crop((left, top, right, bottom))
+            im.save(file_path)
 
     if model_index == 0:
         model = model_0

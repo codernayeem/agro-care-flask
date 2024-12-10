@@ -10,6 +10,11 @@ app = Flask(__name__)
 
 all_data = json.load(open("data.json", "r"))
 
+# create "save" folder if not exists
+import os
+if not os.path.exists("save"):
+    os.makedirs("save")
+
 model_0_path = "model/tomato.pt"
 model_1_path = "model/potato.pt"
 model_2_path = "model/corn.pt"
